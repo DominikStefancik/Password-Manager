@@ -20,12 +20,12 @@ public class UserMapperTest {
     assertThat(userDto.getName()).isEqualTo("Matthew");
     assertThat(userDto.getUsername()).isEqualTo("matt");
     assertThat(userDto.getEmail()).isEqualTo("matt@test.com");
-    assertThat(userDto.getDateOfBirth()).isEqualTo(LocalDate.of(1980, 3, 24));
+    assertThat(userDto.getDateOfBirth()).isEqualTo("1980-03-24");
   }
 
   @Test
   public void userdto_is_mapped_to_user_correctly() {
-    final var userDto = new UserDTO(1L, "Peter", "pete", "pete@test.com", LocalDate.of(1972, 4, 12));
+    final var userDto = new UserDTO(1L, "Peter", "pete", "pete@test.com", "1972-04-12");
     final var user = UserMapper.mapToUser(userDto);
 
     assertThat(user).isNotNull();

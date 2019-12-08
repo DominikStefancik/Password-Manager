@@ -3,7 +3,12 @@ package com.nortoncommander.passman.mapper;
 import com.nortoncommander.passman.dto.UserDTO;
 import com.nortoncommander.passman.model.User;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class UserMapper {
+
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
   public static UserDTO mapToUserDto(User user) {
     return UserDTO.builder()
@@ -11,7 +16,7 @@ public class UserMapper {
       .name(user.getName())
       .username(user.getUsername())
       .email(user.getEmail())
-      .dateOfBirth(user.getDateOfBirth())
+      .dateOfBirth(FORMATTER.format(user.getDateOfBirth()))
       .build();
   }
 
@@ -20,7 +25,7 @@ public class UserMapper {
       .name(userDTO.getName())
       .username(userDTO.getUsername())
       .email(userDTO.getEmail())
-      .dateOfBirth(userDTO.getDateOfBirth())
+      .dateOfBirth(LocalDate.parse(userDTO.getDateOfBirth()))
       .build();
   }
 }
