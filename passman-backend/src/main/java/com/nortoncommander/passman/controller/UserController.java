@@ -3,6 +3,7 @@ package com.nortoncommander.passman.controller;
 import com.nortoncommander.passman.dto.UserDTO;
 import com.nortoncommander.passman.mapper.UserMapper;
 import com.nortoncommander.passman.service.UserService;
+import com.nortoncommander.passman.validator.UserValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private UserService userService;
+  private UserValidator userValidator;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, UserValidator userValidator) {
     this.userService = userService;
+    this.userValidator = userValidator;
   }
 
   @GetMapping("/{username}")
@@ -26,10 +29,10 @@ public class UserController {
       return ResponseEntity.badRequest().body("Parameter 'username' cannot be empty");
     }
 
-    var user= userService.getUserWithUsername(username);
+    var user = userService.getUserWithUsername(username);
 
     if (user == null) {
-      return ResponseEntity.badRequest().body("User with the username '" + username + "' doesn't exist.");
+      return ResponseEntity.badRequest().body(String.format("User with the username '%s' doesn't exists", username));
     }
 
     log.info("UserController.getAllUsersByName finished.");
@@ -54,8 +57,8 @@ public class UserController {
       return ResponseEntity.badRequest().body("Field 'email' must be provided");
     }
 
-    if (this.validateExistingUser(userDTO.getUsername())) {
-      return ResponseEntity.badRequest().body("User with the username " + userDTO.getUsername() + " already exists");
+    if (userValidator.validateExistingUser(userDTO.getUsername())) {
+      return ResponseEntity.badRequest().body(String.format("User with the username '%s' doesn't exists", userDTO.getUsername()));
     }
 
     userService.createUser(userDTO);
@@ -63,11 +66,5 @@ public class UserController {
     log.info("UserController.createUser finished.");
 
     return ResponseEntity.ok().build();
-  }
-
-  private boolean validateExistingUser(String username) {
-    var existingUser = userService.getUserWithUsername(username);
-
-    return existingUser != null;
   }
 }
