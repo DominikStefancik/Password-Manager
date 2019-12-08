@@ -4,15 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Value
 @AllArgsConstructor
 @Builder
 public class UserDTO {
 
+  private Long id;
   private String name;
   private String username;
   private String email;
-  private Date dateOfBirth;
+  private LocalDate dateOfBirth;
 }

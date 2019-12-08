@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -32,5 +32,5 @@ public class User {
   private String email;
 
   @Column(name = "date_of_birth")
-  private Date dateOfBirth;
+  private LocalDate dateOfBirth;
 }
