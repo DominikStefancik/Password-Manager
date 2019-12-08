@@ -32,7 +32,7 @@ public class UserController {
     var user = userService.getUserWithUsername(username);
 
     if (user == null) {
-      return ResponseEntity.badRequest().body(String.format("User with the username '%s' doesn't exists", username));
+      return ResponseEntity.badRequest().body(String.format("User with the username '%s' doesn't exist", username));
     }
 
     log.info("UserController.getAllUsersByName finished.");
@@ -45,20 +45,12 @@ public class UserController {
     log.info("UserController.createUser accessed.");
     log.info("Request body: " + userDTO.toString());
 
-    if (userDTO.getName() == null) {
-      return ResponseEntity.badRequest().body("Field 'name' must be provided");
-    }
-
-    if (userDTO.getUsername() == null) {
-      return ResponseEntity.badRequest().body("Field 'username' must be provided");
-    }
-
-    if (userDTO.getEmail() == null) {
-      return ResponseEntity.badRequest().body("Field 'email' must be provided");
+    if (!userValidator.validateRequiredFields(userDTO)) {
+      return ResponseEntity.badRequest().body("Fields 'name', 'username', 'email' must be provided");
     }
 
     if (userValidator.validateExistingUser(userDTO.getUsername())) {
-      return ResponseEntity.badRequest().body(String.format("User with the username '%s' doesn't exists", userDTO.getUsername()));
+      return ResponseEntity.badRequest().body(String.format("User with the username '%s' doesn't exist", userDTO.getUsername()));
     }
 
     userService.createUser(userDTO);

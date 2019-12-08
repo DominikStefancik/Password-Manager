@@ -12,6 +12,6 @@ public interface PasswordService {
   Password getPassword(UUID passwordId);
   Password getPassword(String name, String username);
   List<Password> getAllUserPasswords(String username);
-  Password updatePassword(Password password);
-  void deletePassword(Password password);
+  void updatePassword(PasswordDTO passwordDTO);
+  void deletePassword(UUID passwordId);
 }

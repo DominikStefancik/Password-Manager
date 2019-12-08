@@ -1,7 +1,10 @@
 package com.nortoncommander.passman.validator;
 
+import com.nortoncommander.passman.dto.PasswordDTO;
 import com.nortoncommander.passman.service.PasswordService;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class PasswordValidator {
@@ -16,5 +19,15 @@ public class PasswordValidator {
     var existingPassword = passwordService.getPassword(name, username);
 
     return existingPassword != null;
+  }
+
+  public boolean validateExistingPassword(UUID passwordId) {
+    var existingPassword = passwordService.getPassword(passwordId);
+
+    return existingPassword != null;
+  }
+
+  public boolean validateRequiredFields(PasswordDTO passwordDTO) {
+    return passwordDTO.getId() != null && passwordDTO.getName() != null && passwordDTO.getPassword() != null && passwordDTO.getUsername() != null;
   }
 }

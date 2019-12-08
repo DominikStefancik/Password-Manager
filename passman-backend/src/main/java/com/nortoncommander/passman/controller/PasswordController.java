@@ -52,7 +52,7 @@ public class PasswordController {
     var password = passwordService.getPassword(passwordId);
 
     if (password == null) {
-      return ResponseEntity.badRequest().body("Password with the id '" + passwordId + "' doesn't exist.");
+      return ResponseEntity.badRequest().body(String.format("Password with the id '%s' doesn't exist.", passwordId));
     }
 
     log.info("PasswordController.getPassword finished.");
@@ -63,18 +63,10 @@ public class PasswordController {
   @PostMapping
   public ResponseEntity<?> createPassword(@RequestBody PasswordDTO passwordDTO) {
     log.info("PasswordController.createPassword accessed.");
-    log.info("Request body: " + passwordDTO.toString());
+    log.info("Request body: {}", passwordDTO.toString());
 
-    if (passwordDTO.getName() == null) {
-      return ResponseEntity.badRequest().body("Field 'name' must be provided");
-    }
-
-    if (passwordDTO.getPassword() == null) {
-      return ResponseEntity.badRequest().body("Field 'password' must be provided");
-    }
-
-    if (passwordDTO.getUsername() == null) {
-      return ResponseEntity.badRequest().body("Field 'username' must be provided");
+    if (!passwordValidator.validateRequiredFields(passwordDTO)) {
+      return ResponseEntity.badRequest().body("Fields 'id', 'name', 'password', 'username' must be provided");
     }
 
     if (!userValidator.validateExistingUser(passwordDTO.getUsername())) {
@@ -84,12 +76,49 @@ public class PasswordController {
 
     if (passwordValidator.validateExistingPassword(passwordDTO.getName(), passwordDTO.getUsername())) {
       return ResponseEntity.badRequest().body(
-        String.format("Password with the name '%s' for the user with the usernaname '%s' already exists", passwordDTO.getName(), passwordDTO.getUsername()));
+        String.format("Password with the name '%s' for the user with the username '%s' already exists", passwordDTO.getName(), passwordDTO.getUsername()));
     }
 
     passwordService.createPassword(passwordDTO);
 
     log.info("PasswordController.createPassword finished.");
+
+    return ResponseEntity.ok().build();
+  }
+
+  @PutMapping
+  public ResponseEntity<?> updatePassword(@RequestBody PasswordDTO passwordDTO) {
+    log.info("PasswordController.updatePassword accessed.");
+    log.info("Request body: {}", passwordDTO.toString());
+
+    if (!passwordValidator.validateRequiredFields(passwordDTO)) {
+      return ResponseEntity.badRequest().body("Fields 'name', 'password', 'username' must be provided");
+    }
+
+    if (!userValidator.validateExistingUser(passwordDTO.getUsername())) {
+      return ResponseEntity.badRequest().body(
+        String.format("User with the username '%s' doesn't exists", passwordDTO.getUsername()));
+    }
+
+    passwordService.updatePassword(passwordDTO);
+
+    log.info("PasswordController.updatePassword finished.");
+
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deletePassword(@PathVariable("id") UUID passwordId) {
+    log.info("PasswordController.deletePassword accessed.");
+    log.info("Path variable: {}", passwordId);
+
+    if (!passwordValidator.validateExistingPassword(passwordId)) {
+      return ResponseEntity.badRequest().body(String.format("Password with the id '%s' doesn't exist.", passwordId));
+    }
+
+    passwordService.deletePassword(passwordId);
+
+    log.info("PasswordController.deletePassword finished.");
 
     return ResponseEntity.ok().build();
   }

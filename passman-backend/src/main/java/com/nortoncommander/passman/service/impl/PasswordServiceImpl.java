@@ -8,6 +8,7 @@ import com.nortoncommander.passman.service.PasswordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class PasswordServiceImpl implements PasswordService {
   public void createPassword(PasswordDTO passwordDTO) {
     final var newPassword = passwordRepository.save(PasswordMapper.mapToPassword(passwordDTO));
 
-    log.info("New password with id: '" + newPassword.getId() + "' created.");
+    log.info("New password with id: '{}' created.", newPassword.getId());
   }
 
   @Override
@@ -49,16 +50,16 @@ public class PasswordServiceImpl implements PasswordService {
   }
 
   @Override
-  public Password updatePassword(Password password) {
-    final var updatedPassword = passwordRepository.save(password);
+  public void updatePassword(PasswordDTO passwordDTO) {
+    passwordRepository.updatePassword(passwordDTO.getId(), passwordDTO.getName(), passwordDTO.getDescription(), passwordDTO.getPassword(),
+      passwordDTO.getAppUrl(), LocalDateTime.now(), passwordDTO.getPasswordType(), passwordDTO.getUsername());
 
-    log.info("Password with id: '" + password.getId() + "' updated.");
-    return updatedPassword;
+    log.info("Password with id '{}' updated.", passwordDTO.getId());
   }
 
   @Override
-  public void deletePassword(Password password) {
-    passwordRepository.delete(password);
-    log.info("Password with id: '" + password.getId() + "' deleted.");
+  public void deletePassword(UUID passwordId) {
+    passwordRepository.delete(Password.builder().id(passwordId).build());
+    log.info("Password with id '{}' deleted.", passwordId);
   }
 }

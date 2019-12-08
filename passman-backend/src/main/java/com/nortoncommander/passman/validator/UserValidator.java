@@ -1,5 +1,6 @@
 package com.nortoncommander.passman.validator;
 
+import com.nortoncommander.passman.dto.UserDTO;
 import com.nortoncommander.passman.service.UserService;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +17,9 @@ public class UserValidator {
     var existingUser = userService.getUserWithUsername(username);
 
     return existingUser != null;
+  }
+
+  public boolean validateRequiredFields(UserDTO userDTO) {
+    return userDTO.getName() != null && userDTO.getUsername() != null && userDTO.getEmail() != null;
   }
 }
