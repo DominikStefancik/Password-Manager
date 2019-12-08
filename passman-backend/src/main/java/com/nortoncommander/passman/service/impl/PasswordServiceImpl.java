@@ -23,7 +23,11 @@ public class PasswordServiceImpl implements PasswordService {
 
   @Override
   public void createPassword(PasswordDTO passwordDTO) {
-    final var newPassword = passwordRepository.save(PasswordMapper.mapToPassword(passwordDTO));
+    final var newPassword = PasswordMapper.mapToPassword(passwordDTO);
+    newPassword.setId(UUID.randomUUID());
+    newPassword.setLastUpdated(LocalDateTime.now());
+
+    passwordRepository.save(newPassword);
 
     log.info("New password with id: '{}' created.", newPassword.getId());
   }

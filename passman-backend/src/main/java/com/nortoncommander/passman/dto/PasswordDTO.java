@@ -1,12 +1,14 @@
 package com.nortoncommander.passman.dto;
 
 import com.nortoncommander.passman.model.PasswordType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
 import java.util.UUID;
 
 @Value
+@AllArgsConstructor
 @Builder
 public class PasswordDTO {
 

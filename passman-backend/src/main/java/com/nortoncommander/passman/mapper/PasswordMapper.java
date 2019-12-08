@@ -5,11 +5,10 @@ import com.nortoncommander.passman.model.Password;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 public class PasswordMapper {
 
-  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+  public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
   public static PasswordDTO mapToPasswordDto(Password password) {
     return PasswordDTO.builder()
@@ -26,7 +25,7 @@ public class PasswordMapper {
 
   public static Password mapToPassword(PasswordDTO passwordDTO) {
     return Password.builder()
-      .id(UUID.randomUUID())
+      .id(passwordDTO.getId())
       .name(passwordDTO.getName())
       .description(passwordDTO.getDescription())
       .password(passwordDTO.getPassword())
