@@ -24,7 +24,7 @@ public class PasswordValidator {
   public boolean validateExistingPassword(UUID passwordId) {
     var existingPassword = passwordService.getPassword(passwordId);
 
-    return existingPassword != null;
+    return existingPassword.isPresent();
   }
 
   public boolean validateRequiredFields(PasswordDTO passwordDTO) {

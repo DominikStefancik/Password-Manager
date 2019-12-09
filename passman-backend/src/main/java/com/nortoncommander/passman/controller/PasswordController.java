@@ -51,7 +51,7 @@ public class PasswordController {
 
     var password = passwordService.getPassword(passwordId);
 
-    if (password.isPresent()) {
+    if (password.isEmpty()) {
       return ResponseEntity.badRequest().body(String.format("Password with the id '%s' doesn't exist.", passwordId));
     }
 
