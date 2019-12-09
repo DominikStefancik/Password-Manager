@@ -17,23 +17,23 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = MockConfig.class)
 @WebMvcTest(controllers = PasswordController.class)
-public class CreatePasswordControllerIntegrationTest {
+public class UpdatePasswordControllerIntegrationTest {
   @Autowired
   private MockMvc mockMvc;
 
   @MockBean
   private UserService userService;
 
-  private static final String CREATE_PASSWORD_URL = "/password";
+  private static final String UPDATE_PASSWORD_URL = "/password";
 
   @Test
-  public void create_password_request_returns_status_ok() throws Exception {
+  public void update_password_request_returns_status_ok() throws Exception {
     final var passwordDto = PasswordDTO.builder()
       .id(UUID.randomUUID())
       .name("TestPassword")
@@ -41,83 +41,83 @@ public class CreatePasswordControllerIntegrationTest {
       .username("TestUser")
       .build();
 
-    final var postBuilder = post(CREATE_PASSWORD_URL)
+    final var putBuilder = put(UPDATE_PASSWORD_URL)
       .content(TestUtils.getJsonString(passwordDto))
       .contentType("application/json;charset=UTF-8");
 
     Mockito.when(userService.getUserWithUsername(passwordDto.getUsername()))
       .thenReturn(User.builder().username(passwordDto.getUsername()).build());
 
-    this.mockMvc.perform(postBuilder)
+    this.mockMvc.perform(putBuilder)
       .andExpect(status().isOk());
   }
 
   @Test
-  public void create_password_request_with_missing_id_returns_bad_request() throws Exception {
+  public void update_password_request_with_missing_id_returns_bad_request() throws Exception {
     final var passwordDto = PasswordDTO.builder()
       .name("TestPassword")
       .password("123456")
       .username("TestUser")
       .build();
 
-    final var postBuilder = post(CREATE_PASSWORD_URL)
+    final var putBuilder = put(UPDATE_PASSWORD_URL)
       .content(TestUtils.getJsonString(passwordDto))
       .contentType("application/json;charset=UTF-8");
 
-    this.mockMvc.perform(postBuilder)
+    this.mockMvc.perform(putBuilder)
       .andExpect(status().isBadRequest());
   }
 
   @Test
-  public void create_password_request_with_missing_name_returns_bad_request() throws Exception {
+  public void update_password_request_with_missing_name_returns_bad_request() throws Exception {
     final var passwordDto = PasswordDTO.builder()
       .id(UUID.randomUUID())
       .password("123456")
       .username("TestUser")
       .build();
 
-    final var postBuilder = post(CREATE_PASSWORD_URL)
+    final var putBuilder = put(UPDATE_PASSWORD_URL)
       .content(TestUtils.getJsonString(passwordDto))
       .contentType("application/json;charset=UTF-8");
 
-    this.mockMvc.perform(postBuilder)
+    this.mockMvc.perform(putBuilder)
       .andExpect(status().isBadRequest());
   }
 
   @Test
-  public void create_password_request_with_missing_password_returns_bad_request() throws Exception {
+  public void update_password_request_with_missing_password_returns_bad_request() throws Exception {
     final var passwordDto = PasswordDTO.builder()
       .id(UUID.randomUUID())
       .name("TestPassword")
       .username("TestUser")
       .build();
 
-    final var postBuilder = post(CREATE_PASSWORD_URL)
+    final var putBuilder = put(UPDATE_PASSWORD_URL)
       .content(TestUtils.getJsonString(passwordDto))
       .contentType("application/json;charset=UTF-8");
 
-    this.mockMvc.perform(postBuilder)
+    this.mockMvc.perform(putBuilder)
       .andExpect(status().isBadRequest());
   }
 
   @Test
-  public void create_password_request_with_missing_username_returns_bad_request() throws Exception {
+  public void update_password_request_with_missing_username_returns_bad_request() throws Exception {
     final var passwordDto = PasswordDTO.builder()
       .id(UUID.randomUUID())
       .name("TestPassword")
       .password("123456")
       .build();
 
-    final var postBuilder = post(CREATE_PASSWORD_URL)
+    final var putBuilder = put(UPDATE_PASSWORD_URL)
       .content(TestUtils.getJsonString(passwordDto))
       .contentType("application/json;charset=UTF-8");
 
-    this.mockMvc.perform(postBuilder)
+    this.mockMvc.perform(putBuilder)
       .andExpect(status().isBadRequest());
   }
 
   @Test
-  public void create_password_request_with_nonexisting_user_returns_bad_request() throws Exception {
+  public void update_password_request_with_nonexisting_user_returns_bad_request() throws Exception {
     final var passwordDto = PasswordDTO.builder()
       .id(UUID.randomUUID())
       .name("TestPassword")
@@ -125,13 +125,13 @@ public class CreatePasswordControllerIntegrationTest {
       .username("TestUser")
       .build();
 
-    final var postBuilder = post(CREATE_PASSWORD_URL)
+    final var putBuilder = put(UPDATE_PASSWORD_URL)
       .content(TestUtils.getJsonString(passwordDto))
       .contentType("application/json;charset=UTF-8");
 
     Mockito.when(userService.getUserWithUsername(passwordDto.getUsername())).thenReturn(null);
 
-    this.mockMvc.perform(postBuilder)
+    this.mockMvc.perform(putBuilder)
       .andExpect(status().isBadRequest());
   }
 }
