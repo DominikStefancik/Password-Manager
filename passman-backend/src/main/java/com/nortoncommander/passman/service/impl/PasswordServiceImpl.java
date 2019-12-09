@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -33,8 +34,8 @@ public class PasswordServiceImpl implements PasswordService {
   }
 
   @Override
-  public Password getPassword(UUID passwordId) {
-    final var password = passwordRepository.findById(passwordId).orElse(null);
+  public Optional<Password> getPassword(UUID passwordId) {
+    final var password = passwordRepository.findById(passwordId);
 
     return password;
   }

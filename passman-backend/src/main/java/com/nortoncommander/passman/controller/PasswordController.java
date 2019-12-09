@@ -51,13 +51,13 @@ public class PasswordController {
 
     var password = passwordService.getPassword(passwordId);
 
-    if (password == null) {
+    if (password.isPresent()) {
       return ResponseEntity.badRequest().body(String.format("Password with the id '%s' doesn't exist.", passwordId));
     }
 
     log.info("PasswordController.getPassword finished.");
 
-    return ResponseEntity.ok(PasswordMapper.mapToPasswordDto(password));
+    return ResponseEntity.ok(PasswordMapper.mapToPasswordDto(password.get()));
   }
 
   @PostMapping
