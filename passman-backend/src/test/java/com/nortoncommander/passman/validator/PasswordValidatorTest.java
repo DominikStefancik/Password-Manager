@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,10 +39,10 @@ public class PasswordValidatorTest {
   @Test
   public void validate_existing_password_with_id_validates_correctly() {
     final var passwordId = UUID.randomUUID();
-    Mockito.when(passwordService.getPassword(passwordId))
-      .thenReturn(Password.builder()
-        .id(passwordId)
-        .build());
+    final var password = Password.builder()
+      .id(passwordId)
+      .build();
+    Mockito.when(passwordService.getPassword(passwordId)).thenReturn(Optional.of(password));
 
     assertThat(passwordValidator.validateExistingPassword(passwordId)).isTrue();
   }
